@@ -1,7 +1,6 @@
 {{#each posts as |post|}}
-  <div class="post" style="background: lightgray;">
+  <div class="post" style="background: lightgray;"  onclick="window.location.href='/post/' + {{post.id}}">
     <h2>{{post.name}}</h2>
-    <p>{{post.description}}</p>
     <p>Posted by: {{post.user.name}} on {{format_date post.date_created}}</p>
   </div>
 {{/each}}

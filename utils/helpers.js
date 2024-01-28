@@ -1,7 +1,8 @@
 module.exports = {
-    format_date: (date) => {
-      // Format date as MM/DD/YYYY
+  format_date: (date) => {
+    if (date) {
       return date.toLocaleDateString();
-    },
-  };
-  
+    }
+    return 'Invalid Date';
+  },
+};
