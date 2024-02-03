@@ -2,4 +2,21 @@
     <h2>{{post.name}}</h2>
     <p>{{post.description}}</p>
     <p>Posted by: {{post.user.name}} on {{format_date post.date_created}}</p>
+</div>
+<div class="comments" style="background: lightgray;">
+    <h3>Comments</h3>
+    {{#each post.comments}}
+        <div class="comment">
+            <p>{{post.comments.text}}</p>
+            <p>Posted by: {{post.user.name}} on {{format_date post.date_created}}</p>
+        </div>
+    {{/each}}
+</div>
+
+
+{{#each comments as |comment|}}
+  <div class="comment" style="background: lightgray;">
+    <h2>{{comment.text}}</h2>
+    <p>Posted by: {{comment.user.name}} on {{format_date comment.date_created}}</p>
   </div>
+{{/each}}

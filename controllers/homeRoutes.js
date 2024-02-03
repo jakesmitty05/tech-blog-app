@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { Post, User } = require('../models');
+const { Post, User, Comment } = require('../models');
 const withAuth = require('../utils/auth');
 
 router.get('/', async (req, res) => {
@@ -27,11 +27,12 @@ router.get('/', async (req, res) => {
   }
 });
 
-router.get('/post/:id', async (req, res) => {
+router.get('/post/:id', withAuth, async (req, res) => {
   try {
-    const postData = await Post.findOne({
+    const postId = req.params.id;
+    const commentsData = await Comment.findAll({
       where: {
-        id: req.params.id,
+        post_id: postId,
       },
       include: [
         {
@@ -41,23 +42,25 @@ router.get('/post/:id', async (req, res) => {
       ],
     });
 
-    if (!postData) {
-      res.status(404).json({ message: 'No post found with this id!' });
-      return;
-    }
-
+    const postData = await Post.findByPk(postId, {
+      include: [
+        {
+          model: User,
+          attributes: ['name'],
+        },
+      ],
+    });
     const post = postData.get({ plain: true });
-
+    const comments = commentsData.map((comment) => comment.get({ plain: true }));
     res.render('post', { 
       post, 
+      comments,
       logged_in: req.session.logged_in 
     });
-
   } catch (err) {
     res.status(500).json(err);
   }
-  });
-
+});
 
 router.get('/login', (req, res) => {
   // If the user is already logged in, redirect the request to another route
@@ -119,13 +122,6 @@ router.get('/edit/:id', async (req, res) => {
     res.status(500).json(err);
   }
   });
-
-
-
-
-
-
-
 
 
 
